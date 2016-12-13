@@ -5,6 +5,8 @@
         %h1 welcome to sample app
         - if user_signed_in?
           %h3 you have succesfully signed in
+          = link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link'
+          |
           = link_to "Sign Out", destroy_user_session_path, :method => :delete, class: 'button btn btn-default navbar-btn'
         - else
           = link_to "Sign In", new_user_session_path, :method => :get, class: 'button btn btn-default navbar-btn'
