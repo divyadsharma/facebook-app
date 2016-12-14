@@ -1,10 +1,15 @@
 FacebookApp::Application.routes.draw do
+  get "friendships/create"
+  get "friendships/update"
+  get "friendships/destroy"
   # devise_for :users
   # resources :home
   devise_for :users, controllers: { registrations: "registrations" } do
     post '/sign_up' => 'registrations#create'
   end
   root :to =>'home#index'
+  resources :friendships, only: [:create, :update, :destroy]
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
