@@ -4,7 +4,10 @@
       .text-center
         %h1 welcome to sample app
         - if user_signed_in?
-          %h3 you have succesfully signed in
+          -binding.pry
+          %h3 you have succesfully signed in #{current_user.username.to_s.humanize}
+          = link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link', class: 'button btn btn-default navbar-btn'
+          = link_to 'Post', :class => 'navbar-link', class: 'button btn btn-default navbar-btn'
           = link_to "Sign Out", destroy_user_session_path, :method => :delete, class: 'button btn btn-default navbar-btn'
         - else
           = link_to "Sign In", new_user_session_path, :method => :get, class: 'button btn btn-default navbar-btn'
