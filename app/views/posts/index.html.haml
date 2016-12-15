@@ -1,0 +1,28 @@
+%h1 Listing posts
+
+%table
+  %tr
+    %th Title
+    %th Body
+    %th Username
+
+  - @posts.each do |post|
+    %tr
+      %td= post.title
+      %td= post.body
+      -binding.pry
+      %td= post.user.username
+      %td= link_to 'Show', post
+      %td
+        - if current_user && post.user == current_user
+          = link_to 'Edit', edit_post_path(post)
+      %td
+        - if current_user && post.user == current_user
+          = link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' }
+
+      / %td= link_to 'Edit', edit_post_path(post)
+      / %td= link_to 'Destroy', post, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+- if current_user
+  = link_to 'New Post', new_post_path

@@ -1,4 +1,6 @@
 FacebookApp::Application.routes.draw do
+  resources :posts
+
   get "friendships/create"
   get "friendships/update"
   get "friendships/destroy"
