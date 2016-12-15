@@ -1,0 +1,7 @@
+%h1 Posts#new
+%p Find me in app/views/posts/show.html.haml
+fsdcxrfdc
+= form_for @post do |f|
+  = f.text_field :title
+  = f.text_area :body, size: "60x12"
+  = f.submit "Create"

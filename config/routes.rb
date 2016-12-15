@@ -1,4 +1,8 @@
 FacebookApp::Application.routes.draw do
+  get "comments/new"
+  get "comments/create"
+  get "posts/index"
+  get "posts/show"
   get "friendships/create"
   get "friendships/update"
   get "friendships/destroy"
@@ -9,6 +13,13 @@ FacebookApp::Application.routes.draw do
   end
   root :to =>'home#index'
   resources :friendships, only: [:create, :update, :destroy]
+  resources :posts do
+    resources :comments
+  end
+
+  resources :comments do
+    resources :comments
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

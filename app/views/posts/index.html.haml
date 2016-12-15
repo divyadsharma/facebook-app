@@ -1,0 +1,9 @@
+%h1 Posts
+- @posts.each do |post|
+  %p
+    / = link_to(post.title, post.body, target: "_blank")
+    = link_to("Show post", post)
+    = link_to("create post", new_post_path(id: post.id))
+    %span.content= post.body
+    %span.timestamp
+      Posted #{time_ago_in_words(post.created_at)} ago.
