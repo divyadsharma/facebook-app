@@ -1,28 +1,65 @@
-%h1 Listing posts
+.container
+  .row
+    / %h2=pluralize(@comments.count, "Comment")
+    - @posts.each do |post|
+      .col-sm-8
+        .panel.panel-white.post.panel-shadow
+          .post-heading
+            %h2=post.title
+            .pull-left.image
+              %img.img-circle.avatar{:alt => "user profile image", :src => "http://bootdey.com/img/Content/user_1.jpg"}/
+          .post-description
+            %p=post.body
+            .stats
+              %a.btn.btn-default.stat-item{:href => "#"}
+                %i.fa.fa-thumbs-up.icon>
+                2
+              %a.btn.btn-default.stat-item{:href => "#"}
+                %i.fa.fa-thumbs-down.icon>
+                12
+              = link_to 'Show Post', post, class: 'btn btn-default stat-item'
+              - if current_user && post.user == current_user
+                = link_to 'Edit Post', edit_post_path(post), class: 'btn btn-default stat-item'
+                = link_to 'Destroy Post', post, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default stat-item'  
+                = link_to 'New Post', new_post_path, class: 'btn btn-default stat-item'
+          %p
+            %i.icon-user
+            by #{post.user.username}
+            |
+            %i.icon-calendar
+            Posted #{time_ago_in_words(post.created_at)} ago.
+            |
+            %i.icon-comment
+            =pluralize(post.comments.count, "Comment")
+            |
 
-%table
-  %tr
-    %th Title
-    %th Body
-    %th Username
+/ =render 'comments/form'
 
-  - @posts.each do |post|
-    %tr
-      %td= post.title
-      %td= post.body
-      -binding.pry
-      %td= post.user.username
-      %td= link_to 'Show', post
-      %td
-        - if current_user && post.user == current_user
-          = link_to 'Edit', edit_post_path(post)
-      %td
-        - if current_user && post.user == current_user
-          = link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' }
 
-      / %td= link_to 'Edit', edit_post_path(post)
-      / %td= link_to 'Destroy', post, :method => :delete, :data => { :confirm => 'Are you sure?' }
+/ %h1 Listing posts
 
-%br
-- if current_user
-  = link_to 'New Post', new_post_path
+/ %table
+/   %tr
+/     %th Title
+/     %th Body
+/     %th Username
+
+/   - @posts.each do |post|
+/     %tr
+/       %td= post.title
+/       %td= post.body
+/       %td= post.user.username
+/       %td= link_to 'Show', post
+/       %td
+/         - if current_user && post.user == current_user
+/           = link_to 'Edit', edit_post_path(post)
+/       %td
+/         - if current_user && post.user == current_user
+/           = link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' }
+
+/       / %td= link_to 'Edit', edit_post_path(post)
+/       / %td= link_to 'Destroy', post, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+/ %br
+/ - if current_user
+/   = link_to 'New Post', new_post_path

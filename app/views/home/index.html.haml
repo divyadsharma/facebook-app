@@ -25,7 +25,6 @@
   .panel-heading Friends List:
   %table.table-hover.table-condensed
     - @users.each do |user|
-      -binding.pry
       - if user != current_user && user.pending && !current_user.pending.include?(user) && !current_user.active_friends.include?(user) && !current_user.received_friends.include?(user)
         %tr
           %td= user.username

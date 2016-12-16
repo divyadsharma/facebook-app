@@ -1,32 +1,49 @@
 %p#notice= notice
 
-%p
-  %b Title:
-  = @post.title
-%p
-  %b Body:
-  = @post.body
-%p
-  %b User:
-  = @post.user. username
-%span.timestamp
-  Posted #{time_ago_in_words(@post.created_at)} ago.
-  
+.container
+  .well
+    .media
+      %a.pull-left{:href => "#"}
+        %img.media-object{:src => "http://placekitten.com/150/150"}/
+      .media-body
+        %h2.media-heading=@post.title
+        %p.text-right=@post.user.username
+        %p=@post.body
+        %ul.list-inline.list-unstyled
+          %li
+            %span
+              %i.glyphicon.glyphicon-calendar
+              %span.timestamp
+                Posted #{time_ago_in_words(@post.created_at)} ago.
+          %li |
+          %span
+            %i.glyphicon.glyphicon-comment
+          =pluralize(@comments.count, "Comment")
+          %li |
+        - if @post.user.id == current_user.id
+          .text-center.edit-links
+            = link_to "Cancel", posts_path, class: 'btn btn-default stat-item'
+            = link_to "Edit Post", edit_post_path(@post), class: 'btn btn-default stat-item'
+        - else
+          .text-center.edit-links
+            =link_to "Cancel", posts_path, class: 'btn btn-default stat-item'
+      =render 'comments/form'
+      -  if @comments.present?
+        = render 'comments/comment'
 
 
 / = link_to 'Edit', edit_post_path(@post)
 / \|
 / = link_to 'Back', posts_path
-- if @post.user.id == current_user.id
-  .text-center.edit-links
-    = link_to "Cancel", posts_path
-    |
-    = link_to "Edit Post", edit_post_path(@post)
-- else
-  .text-center.edit-links
-    =link_to "Cancel", posts_path
--binding.pry
--  if @comments.present?
-  = render 'comments/comment'
-- else
-  =render 'comments/form'
+/ - if @post.user.id == current_user.id
+/   .text-center.edit-links
+/     = link_to "Cancel", posts_path
+/     |
+/     = link_to "Edit Post", edit_post_path(@post)
+/ - else
+/   .text-center.edit-links
+/     =link_to "Cancel", posts_path
+/ -  if @comments.present?
+/   = render 'comments/comment'
+/ - else
+/   =render 'comments/form'

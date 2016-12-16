@@ -12,7 +12,7 @@ class FriendshipsController < ApplicationController
 
   def update
     binding.pry
-    # @friendship = Friendship.find_by(id: params[:id])
+    @friendship = Friendship.find_by(user_id: params[:id])
     # @friendship = Friendship.where(friend_id: params[:friend_id], user_id: params: [user_id])
     # binding.pry
     @friendship.update(accepted: true)

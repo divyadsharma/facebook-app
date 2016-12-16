@@ -5,15 +5,13 @@ class PostsController < ApplicationController
   respond_to :html
 
   def index
-    binding.pry
     @posts = Post.all
     respond_with(@posts)
   end
 
   def show
     # respond_with(@post)
-    binding.pry
-    @comments = Comment.where(post_id: @post).order("created_at DESC")
+    @comments = Comment.where(post_id: @post).order('created_at DESC')
   end
 
   def new
@@ -61,10 +59,10 @@ class PostsController < ApplicationController
       params.require(:post).permit(:title, :body, :user_id)
     end
 
-    def owned_post  
+    def owned_post
       unless current_user == @post.user
         flash[:alert] = "That post doesn't belong to you!"
         redirect_to root_path
       end
-    end 
+    end
 end
