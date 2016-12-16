@@ -1,0 +1,46 @@
+=pluralize(@comments.count, "Comment")
+- @comments.each do |comment|
+  .comment
+    .user-name
+      =comment.user.username
+  .comment-content
+    =comment.content
+  %span.timestamp
+  Posted #{time_ago_in_words(@post.created_at)} ago.
+
+  -if current_user == comment.user
+    =link_to 'Destroy Comment', [comment.post,comment], method: :delete
+    =link_to 'Edit Comment', edit_post_comment_path(comment.post, comment)
+
+=render 'comments/form'
+/ = link_to post_comment_path(post, comment), method: :delete, data: { confirm: "Are you sure?" }, remote: true do
+/       %span(class="glyphicon glyphicon-remove delete-comment")
+.container
+  .row
+    - @comments.each do |comment|
+      .col-sm-8
+        .panel.panel-white.post.panel-shadow
+          .post-heading
+            .pull-left.image
+              %img.img-circle.avatar{:alt => "user profile image", :src => "http://bootdey.com/img/Content/user_1.jpg"}/
+            .pull-left.meta
+              .title.h5
+                %a{:href => "#"}
+                  %b=comment.user.username
+                made a post.
+              %h6.text-muted.time Posted #{time_ago_in_words(@post.created_at)} ago.
+          .post-description
+            %p=comment.content
+            .stats
+              %a.btn.btn-default.stat-item{:href => "#"}
+                %i.fa.fa-thumbs-up.icon>
+                2
+              %a.btn.btn-default.stat-item{:href => "#"}
+                %i.fa.fa-thumbs-down.icon>
+                12
+              %a.btn.btn-default.stat-item{:href => "#"}
+                %i.fa.fa-thumbs-up.icon>
+                Destroy Comment
+              %a.btn.btn-default.stat-item{:href => "#"}
+                %i.fa.fa-thumbs-up.icon>
+                Edit Comment

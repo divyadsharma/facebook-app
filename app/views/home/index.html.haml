@@ -10,22 +10,21 @@
       %ul.nav.navbar-nav.navbar-right
         - if user_signed_in?
           %li
-            = link_to 'View profile', edit_user_registration_path, :class => 'navbar-link'
+            = link_to 'View profile', edit_user_registration_path
             / = link_to "New Post", new_post_path
           %li
-            = link_to 'View Post', posts_path, :class => 'navbar-link'
+            = link_to 'View Post', posts_path
           %li
-            = link_to "Sign Out", destroy_user_session_path, :method => :delete, class: 'button btn btn-default navbar-btn'
+            = link_to "Sign Out", destroy_user_session_path, :method => :delete
         - else
           %li
-            = link_to "Sign In", new_user_session_path, :method => :get, class: 'button btn btn-default navbar-btn'
+            = link_to "Sign In", new_user_session_path, :method => :get
           %li
-            = link_to "Sign Up", new_user_registration_path, :method => :get, class: 'button btn btn-default'
+            = link_to "Sign Up", new_user_registration_path, :method => :get
 .panel.panel-default
   .panel-heading Friends List:
   %table.table-hover.table-condensed
     - @users.each do |user|
-      -binding.pry
       - if user != current_user && user.pending && !current_user.pending.include?(user) && !current_user.active_friends.include?(user) && !current_user.received_friends.include?(user)
         %tr
           %td= user.username
