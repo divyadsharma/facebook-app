@@ -1,0 +1,17 @@
+=pluralize(@comments.count, "Comment")
+- @comments.each do |comment|
+  .comment
+    .user-name
+      =comment.user.username
+  .comment-content
+    =comment.content
+  %span.timestamp
+  Posted #{time_ago_in_words(@post.created_at)} ago.
+
+  -if current_user == comment.user
+    =link_to 'Destroy Comment', [comment.post,comment], method: :delete
+    =link_to 'Edit Comment', edit_post_comment_path(comment.post, comment)
+
+=render 'comments/form'
+/ = link_to post_comment_path(post, comment), method: :delete, data: { confirm: "Are you sure?" }, remote: true do
+/       %span(class="glyphicon glyphicon-remove delete-comment")

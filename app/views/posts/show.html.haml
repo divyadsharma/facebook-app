@@ -6,12 +6,13 @@
 %p
   %b Body:
   = @post.body
+%p
+  %b User:
+  = @post.user. username
 %span.timestamp
   Posted #{time_ago_in_words(@post.created_at)} ago.
+  
 
-/ %p
-/   %b User:
-/   = @post.user_id
 
 / = link_to 'Edit', edit_post_path(@post)
 / \|
@@ -24,3 +25,8 @@
 - else
   .text-center.edit-links
     =link_to "Cancel", posts_path
+-binding.pry
+-  if @comments.present?
+  = render 'comments/comment'
+- else
+  =render 'comments/form'

@@ -5,13 +5,15 @@ class PostsController < ApplicationController
   respond_to :html
 
   def index
-    debugger
-    @posts = Post.where(user_id: current_user.id)
+    binding.pry
+    @posts = Post.all
     respond_with(@posts)
   end
 
   def show
-    respond_with(@post)
+    # respond_with(@post)
+    binding.pry
+    @comments = Comment.where(post_id: @post).order("created_at DESC")
   end
 
   def new
