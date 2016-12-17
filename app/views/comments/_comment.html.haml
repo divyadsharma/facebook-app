@@ -11,22 +11,25 @@
               .title.h5
                 %a{:href => "#"}
                   %b=comment.user.username
-                made a post.
-              %h6.text-muted.time Posted #{time_ago_in_words(@post.created_at)} ago.
+                made a comment.
+              %h6.text-muted.time Posted #{time_ago_in_words(comment.created_at)} ago.
           .post-description
             %p=comment.content
             .stats
-              %a.btn.btn-default.stat-item{:href => "#"}
-                %i.fa.fa-thumbs-up.icon>
-                2
-              %a.btn.btn-default.stat-item{:href => "#"}
-                %i.fa.fa-thumbs-down.icon>
-                12
+              %span.glyphicon.glyphicon-thumbs-up
+              = link_to "Like", like_post_comment_path(comment.post, comment), method: :put
+              %span.glyphicon.glyphicon-thumbs-down
+              = link_to "Unlike", dislike_post_comment_path(comment.post, comment), method: :put
               -if current_user == comment.user
-                =link_to 'Destroy Comment', [comment.post,comment], method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default stat-item'
-                %i.fa.fa-thumbs-up.icon>
                 =link_to 'Edit Comment', edit_post_comment_path(comment.post, comment), class: 'btn btn-default stat-item'
-                %i.fa.fa-thumbs-up.icon>   
-
+                =link_to 'Destroy Comment', [comment.post,comment], method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default stat-item'
+            %p
+              %span.glyphicon.glyphicon-thumbs-up
+              #{comment.get_upvotes.size}
+              %span.glyphicon.glyphicon-thumbs-down
+              #{comment.get_downvotes.size}
+%link{:href => "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", :rel => "stylesheet"}/
+%script{:src => "https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"}
+%script{:src => "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"}
 / =render 'comments/form'
 

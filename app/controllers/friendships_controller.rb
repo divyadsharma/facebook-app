@@ -2,32 +2,39 @@ class FriendshipsController < ApplicationController
   def create
     @friendship = current_user.friendships.build(friend_id: params[:friend_id])
     if @friendship.save
-      flash[:notice] = "Friend requested."
-      redirect_to :back
+      flash[:notice] = 'Friend requested.'
     else
-      flash[:error] = "Unable to request friendship."
-      redirect_to :back
+      flash[:error] = 'Unable to request friendship.'
     end
+    redirect_to :back
   end
 
   def update
-    binding.pry
-    @friendship = Friendship.find_by(user_id: params[:id])
-    # @friendship = Friendship.where(friend_id: params[:friend_id], user_id: params: [user_id])
-    # binding.pry
+    @friendship =
+      Friendship.find_by(friend_id: current_user.id, user_id: params[:id])
     @friendship.update(accepted: true)
-    # @friendship.update(status: "accepted")
     if @friendship.save
-      redirect_to root_url, notice: "Successfully confirmed friend!"
+      redirect_to root_url, notice: 'Successfully confirmed friend!'
     else
-      redirect_to root_url, notice: "Sorry! Could not confirm friend!"
+      redirect_to root_url, notice: 'Sorry! Could not confirm friend!'
     end
   end
 
   def destroy
-    @friendship = Friendship.find_by(id: params[:id])
-    @friendship.destroy
-    flash[:notice] = "Removed friendship."
+    if awaiting_request.present? || sent_request.present?
+      @friendship.destroy
+      flash[:notice] = 'Removed friendship.'
+    end
     redirect_to :back
+  end
+
+  def awaiting_request
+    @friendship =
+      Friendship.find_by(user_id: params[:id], friend_id: current_user.id)
+  end
+
+  def sent_request
+    @friendship =
+      Friendship.find_by(friend_id: params[:id], user_id: current_user.id)
   end
 end

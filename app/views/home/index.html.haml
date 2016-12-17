@@ -2,11 +2,22 @@
   .container-fluid.navbar-container
     .navbar-header
       %button.navbar-toggle.collapsed{"data-target" => "#bs-navbar-collapse-1", "data-toggle" => "collapse", type: "button"}
-        %span.sr-only Toggle Navigation
-        %span.icon-bar
-        %span.icon-bar
       .navbar-brand Welcome #{current_user.username}
     .collapse.navbar-collapse#bs-navbar-collapse-1
+      / .dropdown
+      / %button#dropdownMenu1.btn.btn-default.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+      /   Dropdown
+      /   %span.caret
+      / %ul.dropdown-menu{"aria-labelledby" => "dropdownMenu1"}
+      /   %li
+      /     %a{:href => "#"} Action
+      /   %li
+      /     %a{:href => "#"} Another action
+      /   %li
+      /     %a{:href => "#"} Something else here
+      /   %li.divider{:role => "separator"}
+      /   %li
+      /     %a{:href => "#"} Separated link
       %ul.nav.navbar-nav.navbar-right
         - if user_signed_in?
           %li
@@ -27,7 +38,7 @@
     - @users.each do |user|
       - if user != current_user && user.pending && !current_user.pending.include?(user) && !current_user.active_friends.include?(user) && !current_user.received_friends.include?(user)
         %tr
-          %td= user.username
+          %td= user.email
           %td= link_to "Add Friend", friendships_path(friend_id: user), method: :post
 
 .panel.panel-default
@@ -36,7 +47,7 @@
     - current_user.requested_friendships.each do |request|
       -unless current_user.active_friends.include?(request)
         %tr
-          %td= request.username
+          %td= request.email
           %td= link_to "Accept",  friendship_path(id: request.id), method: "put"
           / %td= link_to "Accept",  friendship_path(friend_id: request.pending.first.id, user_id: request.id), method: "put"
           %td= link_to "Decline", friendship_path(id: request.id), method: :delete
@@ -46,12 +57,12 @@
   %table.table-hover.table-condensed
     - current_user.pending_friends.each do |request|
       %tr
-        %td= request.username
+        %td= request.email
         / = link_to "Accept",  friendship_path(id: request.id), method: "put"
         %td= link_to "Decline", friendship_path(id: request.id), method: :delete
     / - current_user.requested_friendships.each do |request|
     /   %tr
-    /     %td= request.username
+    /     %td= request.email
     /     / = link_to "Accept",  friendship_path(id: request.id), method: "put"
     /     %td= link_to "Decline", friendship_path(id: request.id), method: :delete
 
@@ -60,12 +71,11 @@
   %table.table-hover.table-condensed
     - current_user.active_friends.each do |request|
       %tr
-        %td= request.username
+        %td= request.email
         / = link_to "Accept",  friendship_path(id: request.id), method: "put"
         %td= link_to "Decline", friendship_path(id: request.id), method: :delete
     - current_user.received_friends.each do |request|
       %tr
-        %td= request.username
+        %td= request.email
         / = link_to "Accept",  friendship_path(id: request.id), method: "put"
         %td= link_to "Decline", friendship_path(id: request.id), method: :delete
-

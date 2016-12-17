@@ -1,16 +1,21 @@
 class CommentsController < ApplicationController
   before_action :find_post
-  before_action :find_comment, only: [:destroy, :edit, :update, :comment_owner]
+  before_action :find_comment, only: [:destroy, :edit,
+                                      :update, :comment_owner,
+                                      :upvote, :downvote]
   before_action :comment_owner, only: [:destroy, :edit, :update]
   # before_action :comm
   def create
     @comment = @post.comments.create(comment_params)
-    @comment.user_id = current_user.id
-    @comment.save
-    if @comment.save
+    if @comment.errors.present?
+      flash[:alert] = "Comment #{@comment.errors[:content].first}"
       redirect_to post_path(@post)
     else
-      render 'new'
+      @comment.user_id = current_user.id
+      @comment.save
+      if @comment.save
+        redirect_to post_path(@post)
+      end
     end
   end
 
@@ -28,6 +33,18 @@ class CommentsController < ApplicationController
 
   def destroy
     @comment.destroy
+    redirect_to post_path(@post)
+  end
+
+  def upvote
+    # @comment = Comment.find(params[:id])
+    @comment.upvote_by current_user
+    redirect_to post_path(@post)
+  end
+
+  def downvote
+    # @comment = Comment.find(params[:id])
+    @comment.downvote_by current_user
     redirect_to post_path(@post)
   end
 
