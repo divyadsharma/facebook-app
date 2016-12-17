@@ -1,0 +1,58 @@
+%p#notice= notice
+%link{:href => "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", :rel => "stylesheet"}/
+%script{:src => "https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"}
+%script{:src => "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"}
+.container
+  .well
+    .media
+      %a.pull-left{:href => "#"}
+        %img.media-object{:src => "http://placekitten.com/150/150"}/
+      .media-body
+        %h2.media-heading=@post.title
+        %p.text-right=@post.user.username
+        %p=@post.body
+        %ul.list-inline.list-unstyled
+          %li
+            %span
+              %i.glyphicon.glyphicon-calendar
+              %span.timestamp
+                Posted #{time_ago_in_words(@post.created_at)} ago.
+          %li |
+          %span
+            %i.glyphicon.glyphicon-comment
+          =pluralize(@comments.count, "Comment")
+          %li |
+        / .stats
+        /   %a.btn.btn-default.stat-item{:href => "#"}
+        /     %i.fa.fa-thumbs-up.icon>
+        /     = link_to "Like", like_post_path(@post), method: :put
+        /   %a.btn.btn-default.stat-item{:href => "#"}
+        /     %i.fa.fa-thumbs-down.icon>
+        /     = link_to "Unlike", dislike_post_path(@post), method: :put
+        - if @post.user.id == current_user.id
+          .text-center.edit-links
+            = link_to "Cancel", posts_path, class: 'btn btn-default stat-item'
+            = link_to "Edit Post", edit_post_path(@post), class: 'btn btn-default stat-item'
+        - else
+          .text-center.edit-links
+            =link_to "Cancel", posts_path, class: 'btn btn-default stat-item'
+      =render 'comments/form'
+      -  if @comments.present?
+        = render 'comments/comment'
+
+
+/ = link_to 'Edit', edit_post_path(@post)
+/ \|
+/ = link_to 'Back', posts_path
+/ - if @post.user.id == current_user.id
+/   .text-center.edit-links
+/     = link_to "Cancel", posts_path
+/     |
+/     = link_to "Edit Post", edit_post_path(@post)
+/ - else
+/   .text-center.edit-links
+/     =link_to "Cancel", posts_path
+/ -  if @comments.present?
+/   = render 'comments/comment'
+/ - else
+/   =render 'comments/form'

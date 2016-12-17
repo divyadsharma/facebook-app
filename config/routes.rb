@@ -1,7 +1,32 @@
 FacebookApp::Application.routes.draw do
-  devise_for :users
+  resources :posts do
+    resources :comments do
+      member do
+        put 'like', to: 'comments#upvote'
+        put 'dislike', to: 'comments#downvote'
+      end
+    end
+    member do
+      put 'like', to: 'posts#upvote'
+      put 'dislike', to: 'posts#downvote'
+    end
+  end
+
+  get 'friendships/create'
+  get 'friendships/update'
+  get 'friendships/destroy'
+  # devise_for :users
   # resources :home
-  root :to =>'home#index'
+  devise_for :users, controllers: { registrations: 'registrations' } do
+    post '/sign_up' => 'registrations#create'
+  end
+  # root to: 'home#index'
+  authenticated :user do
+    root to: 'home#index', as: :authenticated_root
+  end
+  root to: redirect('/users/sign_in')
+  resources :friendships, only: [:create, :update, :destroy]
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

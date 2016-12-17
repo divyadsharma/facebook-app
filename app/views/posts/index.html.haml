@@ -1,0 +1,67 @@
+%link{:href => "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", :rel => "stylesheet"}/
+%script{:src => "https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"}
+%script{:src => "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"}
+.container
+  .row
+    = link_to 'New Post', new_post_path, class: 'btn btn-default stat-item'
+    = link_to "Cancel", root_path, class: 'btn btn-default stat-item'
+    -if @posts.present?
+      - @posts.each do |post|
+        .col-sm-8
+          .panel.panel-white.post.panel-shadow
+            .post-heading
+              %h2=post.title
+              .pull-left.image
+                %img.img-circle.avatar{:alt => "user profile image", :src => "http://bootdey.com/img/Content/user_1.jpg"}/
+            .post-description
+              %p=truncate(post.body, length: 20)
+              = link_to 'Show Post', post, class: 'btn btn-default stat-item'
+              .stats
+                %span.glyphicon.glyphicon-thumbs-up
+                = link_to "Like", like_post_path(post), method: :put
+                %span.glyphicon.glyphicon-thumbs-down
+                = link_to "Unlike", dislike_post_path(post), method: :put
+                - if current_user && post.user == current_user
+                  = link_to 'Edit Post', edit_post_path(post), class: 'btn btn-default stat-item'
+                  = link_to 'Destroy Post', post, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default stat-item'  
+            %p
+              %span.glyphicon.glyphicon-user
+              by #{post.user.username}
+              |
+              %span.glyphicon.glyphicon-calendar
+              Posted #{time_ago_in_words(post.created_at)} ago.
+              |
+              %span.glyphicon.glyphicon-comment
+              =pluralize(post.comments.count, "Comment")
+              |
+              %span.glyphicon.glyphicon-thumbs-up
+              #{post.get_upvotes.size}
+              %span.glyphicon.glyphicon-thumbs-down
+              #{post.get_downvotes.size}
+
+
+/ %table
+/   %tr
+/     %th Title
+/     %th Body
+/     %th Username
+
+/   - @posts.each do |post|
+/     %tr
+/       %td= post.title
+/       %td= post.body
+/       %td= post.user.username
+/       %td= link_to 'Show', post
+/       %td
+/         - if current_user && post.user == current_user
+/           = link_to 'Edit', edit_post_path(post)
+/       %td
+/         - if current_user && post.user == current_user
+/           = link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' }
+
+/       / %td= link_to 'Edit', edit_post_path(post)
+/       / %td= link_to 'Destroy', post, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+/ %br
+/ - if current_user
+/   = link_to 'New Post', new_post_path

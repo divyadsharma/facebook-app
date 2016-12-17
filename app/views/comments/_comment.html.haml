@@ -1,0 +1,35 @@
+.container
+  .row
+    %h2=pluralize(@comments.count, "Comment")
+    - @comments.each do |comment|
+      .col-sm-8
+        .panel.panel-white.post.panel-shadow
+          .post-heading
+            .pull-left.image
+              %img.img-circle.avatar{:alt => "user profile image", :src => "http://bootdey.com/img/Content/user_1.jpg"}/
+            .pull-left.meta
+              .title.h5
+                %a{:href => "#"}
+                  %b=comment.user.username
+                made a comment.
+              %h6.text-muted.time Posted #{time_ago_in_words(comment.created_at)} ago.
+          .post-description
+            %p=comment.content
+            .stats
+              %span.glyphicon.glyphicon-thumbs-up
+              = link_to "Like", like_post_comment_path(comment.post, comment), method: :put
+              %span.glyphicon.glyphicon-thumbs-down
+              = link_to "Unlike", dislike_post_comment_path(comment.post, comment), method: :put
+              -if current_user == comment.user
+                =link_to 'Edit Comment', edit_post_comment_path(comment.post, comment), class: 'btn btn-default stat-item'
+                =link_to 'Destroy Comment', [comment.post,comment], method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default stat-item'
+            %p
+              %span.glyphicon.glyphicon-thumbs-up
+              #{comment.get_upvotes.size}
+              %span.glyphicon.glyphicon-thumbs-down
+              #{comment.get_downvotes.size}
+%link{:href => "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", :rel => "stylesheet"}/
+%script{:src => "https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"}
+%script{:src => "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"}
+/ =render 'comments/form'
+

@@ -18,6 +18,8 @@ gem 'devise'
 gem 'bootstrap-sass'
 gem "erb2haml"
 gem "haml-rails"
+gem "pry"
+gem 'acts_as_votable'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
