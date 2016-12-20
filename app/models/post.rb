@@ -3,6 +3,11 @@ class Post < ActiveRecord::Base
   has_many :comments, dependent: :destroy
   validates :title, presence: true
   validates :body, presence: true
-  acts_as_votable
+  has_many :upvotes, dependent: :destroy
+
+  def score
+    upvotes.count
+  end
+  # acts_as_votable
   # validates_presence_of :body, :title
 end

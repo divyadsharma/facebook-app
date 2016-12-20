@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161216185308) do
+ActiveRecord::Schema.define(version: 20161220183021) do
 
   create_table "comments", force: true do |t|
     t.text     "content"
@@ -39,6 +39,18 @@ ActiveRecord::Schema.define(version: 20161216185308) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "upvotes", force: true do |t|
+    t.integer  "post_id"
+    t.integer  "user_id"
+    t.integer  "comment_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "upvotes", ["comment_id"], name: "index_upvotes_on_comment_id"
+  add_index "upvotes", ["post_id"], name: "index_upvotes_on_post_id"
+  add_index "upvotes", ["user_id"], name: "index_upvotes_on_user_id"
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false

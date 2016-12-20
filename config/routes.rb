@@ -1,15 +1,19 @@
 FacebookApp::Application.routes.draw do
+  # get "upvote/create"
+  # get "upvote/destroy"
   resources :posts do
+    resources :upvotes, only: [:create, :destroy]
     resources :comments do
-      member do
-        put 'like', to: 'comments#upvote'
-        put 'dislike', to: 'comments#downvote'
-      end
+      resources :upvotes, only: [:create, :destroy]
+      # member do
+        # put 'like', to: 'comments#upvote'
+        # put 'dislike', to: 'comments#downvote'
+      # end
     end
-    member do
-      put 'like', to: 'posts#upvote'
-      put 'dislike', to: 'posts#downvote'
-    end
+    # member do
+      # put 'like', to: 'posts#upvote'
+      # put 'dislike', to: 'posts#downvote'
+    # end
   end
 
   get 'friendships/create'
