@@ -2,36 +2,25 @@
   .container-fluid.navbar-container
     .navbar-header
       %button.navbar-toggle.collapsed{"data-target" => "#bs-navbar-collapse-1", "data-toggle" => "collapse", type: "button"}
-      .navbar-brand Welcome #{current_user.username}
     .collapse.navbar-collapse#bs-navbar-collapse-1
-      / .dropdown
-      / %button#dropdownMenu1.btn.btn-default.dropdown-toggle{"aria-expanded" => "true", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
-      /   Dropdown
-      /   %span.caret
-      / %ul.dropdown-menu{"aria-labelledby" => "dropdownMenu1"}
-      /   %li
-      /     %a{:href => "#"} Action
-      /   %li
-      /     %a{:href => "#"} Another action
-      /   %li
-      /     %a{:href => "#"} Something else here
-      /   %li.divider{:role => "separator"}
-      /   %li
-      /     %a{:href => "#"} Separated link
       %ul.nav.navbar-nav.navbar-right
-        - if user_signed_in?
-          %li
-            = link_to 'View profile', edit_user_registration_path
-            / = link_to "New Post", new_post_path
+        - if logged_in?
+          .navbar-brand Welcome #{current_user.name}
           %li
             = link_to 'View Post', posts_path
-          %li
-            = link_to "Sign Out", destroy_user_session_path, :method => :delete
+          %li.dropdown
+            %a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+              Account
+              %b.caret
+            %ul.dropdown-menu
+
+              %li= link_to "Settings", edit_user_path(current_user)
+              %li.divider
+              %li
+                = link_to "Log out", logout_path, method: "delete"
         - else
-          %li
-            = link_to "Sign In", new_user_session_path, :method => :get
-          %li
-            = link_to "Sign Up", new_user_registration_path, :method => :get
+          %li= link_to "Log in", login_path, :method => :get
+          %li= link_to "Sign Up", logout_path, :method => :get
 .panel.panel-default
   .panel-heading Friends List:
   %table.table-hover.table-condensed
