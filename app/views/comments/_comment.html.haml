@@ -10,16 +10,16 @@
             .pull-left.meta
               .title.h5
                 %a{:href => "#"}
-                  %b=comment.user.username
+                  %b=comment.user.name
                 made a comment.
               %h6.text-muted.time Posted #{time_ago_in_words(comment.created_at)} ago.
           .post-description
             %p=comment.content
             .stats
               %span.glyphicon.glyphicon-thumbs-up
-              = link_to "Like", like_post_comment_path(comment.post, comment), method: :put
-              %span.glyphicon.glyphicon-thumbs-down
-              = link_to "Unlike", dislike_post_comment_path(comment.post, comment), method: :put
+              = link_to "Like", upvote_post_path(post), method: :post
+              / %span.glyphicon.glyphicon-thumbs-down
+              / = link_to "Unlike", dislike_post_comment_path(comment.post, comment), method: :put
               -if current_user == comment.user
                 =link_to 'Edit Comment', edit_post_comment_path(comment.post, comment), class: 'btn btn-default stat-item'
                 =link_to 'Destroy Comment', [comment.post,comment], method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default stat-item'

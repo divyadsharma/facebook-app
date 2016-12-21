@@ -2,5 +2,6 @@ class Comment < ActiveRecord::Base
   belongs_to :post
   belongs_to :user
   validates :content, presence: true
-  acts_as_votable
+  has_many :votes, dependent: :destroy
+  # acts_as_votable
 end

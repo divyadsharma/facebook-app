@@ -18,15 +18,15 @@
               = link_to 'Show Post', post, class: 'btn btn-default stat-item'
               .stats
                 %span.glyphicon.glyphicon-thumbs-up
-                = link_to "Like", like_post_path(post), method: :put
-                %span.glyphicon.glyphicon-thumbs-down
-                = link_to "Unlike", dislike_post_path(post), method: :put
+                = link_to "Like", upvote_post_path(post), method: :post
+                / %span.glyphicon.glyphicon-thumbs-down
+                / = link_to "Unlike", dislike_post_path(post), method: :put
                 - if current_user && post.user == current_user
                   = link_to 'Edit Post', edit_post_path(post), class: 'btn btn-default stat-item'
-                  = link_to 'Destroy Post', post, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default stat-item'  
+                  = link_to 'Destroy Post', post, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default stat-item'
             %p
               %span.glyphicon.glyphicon-user
-              by #{post.user.username}
+              by #{post.user.name}
               |
               %span.glyphicon.glyphicon-calendar
               Posted #{time_ago_in_words(post.created_at)} ago.
@@ -35,9 +35,9 @@
               =pluralize(post.comments.count, "Comment")
               |
               %span.glyphicon.glyphicon-thumbs-up
-              #{post.get_upvotes.size}
+              / #{post.get_upvotes.size}
               %span.glyphicon.glyphicon-thumbs-down
-              #{post.get_downvotes.size}
+              / #{post.get_downvotes.size}
 
 
 / %table
