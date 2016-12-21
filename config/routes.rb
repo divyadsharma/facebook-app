@@ -1,4 +1,17 @@
 FacebookApp::Application.routes.draw do
+  resources :users
+  root to: 'home#index'
+  get "password_resets/new"
+  get "password_resets/edit"
+  get "sessions/new"
+  resources :password_resets,     only: [:new, :create, :edit, :update]
+  # get '/sign_up', to: 'users#new'
+  get  '/signup',  to: 'users#new'
+  post '/signup',  to: 'users#create'
+  get    '/login',   to: 'sessions#new'
+  post   '/login',   to: 'sessions#create'
+  delete '/logout',  to: 'sessions#destroy'
+  get "users/new"
   resources :posts do
     resources :comments do
       member do
@@ -16,15 +29,14 @@ FacebookApp::Application.routes.draw do
   get 'friendships/update'
   get 'friendships/destroy'
   # devise_for :users
-  # resources :home
-  devise_for :users, controllers: { registrations: 'registrations' } do
-    post '/sign_up' => 'registrations#create'
-  end
+  resources :home
+  # devise_for :users, controllers: { registrations: 'registrations' } do
+  #   post '/sign_up' => 'registrations#create'
+  # end
   # root to: 'home#index'
-  authenticated :user do
-    root to: 'home#index', as: :authenticated_root
-  end
-  root to: redirect('/users/sign_in')
+  # authenticated :user do
+  #   root to: 'home#index', as: :authenticated_root
+  # end
   resources :friendships, only: [:create, :update, :destroy]
 
   # The priority is based upon order of creation: first created -> highest priority.
@@ -67,7 +79,7 @@ FacebookApp::Application.routes.draw do
   #       get 'recent', on: :collection
   #     end
   #   end
-  
+
   # Example resource route with concerns:
   #   concern :toggleable do
   #     post 'toggle'
