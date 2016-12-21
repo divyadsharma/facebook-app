@@ -18,9 +18,9 @@
               = link_to 'Show Post', post, class: 'btn btn-default stat-item'
               .stats
                 %span.glyphicon.glyphicon-thumbs-up
-                = link_to "Like", like_post_path(post), method: :put
+                = link_to "Like", vote_post_path(post, vote: true), method: 'post'
                 %span.glyphicon.glyphicon-thumbs-down
-                = link_to "Unlike", dislike_post_path(post), method: :put
+                = link_to "Unlike", vote_post_path(post, vote: false), method: 'post'
                 - if current_user && post.user == current_user
                   = link_to 'Edit Post', edit_post_path(post), class: 'btn btn-default stat-item'
                   = link_to 'Destroy Post', post, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-default stat-item'
@@ -34,10 +34,10 @@
               %span.glyphicon.glyphicon-comment
               =pluralize(post.comments.count, "Comment")
               |
-              / %span.glyphicon.glyphicon-thumbs-up
-              / #{post.get_upvotes.size}
-              / %span.glyphicon.glyphicon-thumbs-down
-              / #{post.get_downvotes.size}
+              %span.glyphicon.glyphicon-thumbs-up
+              #{post.up_votes}
+              %span.glyphicon.glyphicon-thumbs-down
+              #{post.down_votes}
 
 
 / %table

@@ -15,6 +15,7 @@ class User < ActiveRecord::Base
   has_many :requested_friendships, -> { where(friendships: { accepted: false }) },
            through: :received_friendships, source: :user
   has_many :posts, dependent: :destroy
+  has_many :votes
   validates :name,  presence: true, length: { maximum: 20 }
   validates :email, presence: true, length: { maximum: 255 }
   EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i

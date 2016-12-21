@@ -13,17 +13,27 @@ FacebookApp::Application.routes.draw do
   delete '/logout',  to: 'sessions#destroy'
   get "users/new"
   resources :posts do
+    member do
+      post 'vote'
+    end
     resources :comments do
       member do
-        put 'like', to: 'comments#upvote'
-        put 'dislike', to: 'comments#downvote'
+        post 'vote'  
       end
     end
-    member do
-      put 'like', to: 'posts#upvote'
-      put 'dislike', to: 'posts#downvote'
-    end
   end
+  # resources :posts do
+  #   resources :comments do
+  #     member do
+  #       put 'like', to: 'comments#upvote'
+  #       put 'dislike', to: 'comments#downvote'
+  #     end
+  #   end
+  #   member do
+  #     put 'like', to: 'posts#upvote'
+  #     put 'dislike', to: 'posts#downvote'
+  #   end
+  # end
 
   get 'friendships/create'
   get 'friendships/update'

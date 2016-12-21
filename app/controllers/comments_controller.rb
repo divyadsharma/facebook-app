@@ -2,7 +2,7 @@ class CommentsController < ApplicationController
   before_action :find_post
   before_action :find_comment, only: [:destroy, :edit,
                                       :update, :comment_owner,
-                                      :upvote, :downvote]
+                                      :upvote, :downvote, :vote]
   before_action :comment_owner, only: [:destroy, :edit, :update]
   # before_action :comm
   def create
@@ -36,16 +36,34 @@ class CommentsController < ApplicationController
     redirect_to post_path(@post)
   end
 
-  def upvote
-    # @comment = Comment.find(params[:id])
-    @comment.upvote_by current_user
-    redirect_to post_path(@post)
-  end
+  # def upvote
+  #   # @comment = Comment.find(params[:id])
+  #   @comment.upvote_by current_user
+  #   redirect_to post_path(@post)
+  # end
 
-  def downvote
-    # @comment = Comment.find(params[:id])
-    @comment.downvote_by current_user
-    redirect_to post_path(@post)
+  # def downvote
+  #   # @comment = Comment.find(params[:id])
+  #   @comment.downvote_by current_user
+  #   redirect_to post_path(@post)
+  # end
+  def vote
+    if !@comment.already_upvoted?(current_user) && params[:vote] == 'true'
+      vote = Vote.find_by(voteable: @comment, creator: current_user, vote: false)
+      if vote.present?
+        vote.update_attributes(voteable: @comment, creator: current_user, vote: params[:vote])
+      else
+        Vote.create(voteable: @comment, creator: current_user, vote: params[:vote])
+      end
+    elsif !@comment.already_downvoted?(current_user) && params[:vote] == 'false'
+      vote = Vote.find_by(voteable: @comment, creator: current_user, vote: true)
+      if vote.present?
+        vote.update_attributes(voteable: @comment, creator: current_user, vote: params[:vote])
+      else
+        Vote.create(voteable: @comment, creator: current_user, vote: params[:vote])
+      end
+    end
+    redirect_to :back
   end
 
   private
