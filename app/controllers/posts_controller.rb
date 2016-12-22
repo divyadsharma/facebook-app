@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update,
-                                  :destroy, :upvote, :downvote]
+                                  :destroy, :vote]
   before_action :owned_post, only: [:edit, :update, :destroy]
 
   respond_to :html
@@ -35,7 +35,8 @@ class PostsController < ApplicationController
       flash[:success] = 'Post created!'
       respond_with(@post)
     else
-      flash[:alert] = "Your new post couldn't be created!  Please check the form."
+      flash[:alert] =
+        "Your new post couldn't be created!  Please check the form."
       render :new
     end
   end
@@ -50,14 +51,27 @@ class PostsController < ApplicationController
     respond_with(@post)
   end
 
-  def upvote
-    @post.upvote_by current_user
-    redirect_to posts_path
-  end
-
-  def downvote
-    @post.downvote_by current_user
-    redirect_to posts_path
+  def vote
+    if !@post.already_upvoted?(current_user) && params[:vote] == 'true'
+      vote = Vote.find_by(voteable: @post, creator: current_user, vote: false)
+      if vote.present?
+        vote.update_attributes(voteable: @post,
+                               creator: current_user,
+                               vote: params[:vote])
+      else
+        Vote.create(voteable: @post, creator: current_user, vote: params[:vote])
+      end
+    elsif !@post.already_downvoted?(current_user) && params[:vote] == 'false'
+      vote = Vote.find_by(voteable: @post, creator: current_user, vote: true)
+      if vote.present?
+        vote.update_attributes(voteable: @post,
+                               creator: current_user,
+                               vote: params[:vote])
+      else
+        Vote.create(voteable: @post, creator: current_user, vote: params[:vote])
+      end
+    end
+    redirect_to :back
   end
 
   private

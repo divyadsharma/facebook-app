@@ -1,8 +1,4 @@
 class User < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
   has_many :friendships
   has_many :received_friendships,
            class_name: 'Friendship', foreign_key: 'friend_id'
@@ -16,7 +12,19 @@ class User < ActiveRecord::Base
   has_many :requested_friendships, -> { where(friendships: { accepted: false }) },
            through: :received_friendships, source: :user
   has_many :posts, dependent: :destroy
-  validates :username, presence: true
+  has_many :votes
+  attr_accessor :remember_token, :activation_token, :reset_token, :activation_digest
+  validates :name,  presence: true, length: { maximum: 20 }
+  validates :email, presence: true, length: { maximum: 255 }
+  EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+  validates :email, format: { with: EMAIL_REGEX },
+                    uniqueness: { case_sensitive: false }
+  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
+  has_secure_password
+  before_save   :downcase_email
+  before_create :create_activation_digest
+
+
 # to call all your friends
 
   def friends
@@ -28,4 +36,67 @@ class User < ActiveRecord::Base
   def pending
       pending_friends | requested_friendships
   end
+
+  def self.digest(string)
+    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MorderIN_COST :
+                                                  cost=10
+    BCrypt::Password.create(string, cost: cost)
+  end
+
+  def self.new_token
+    SecureRandom.urlsafe_base64
+  end
+
+  def remember
+    self.remember_token = User.new_token
+    update_attribute(:remember_digest, User.digest(remember_token))
+  end
+
+  def authenticated?(remember_token)
+    return false if remember_digest.nil?
+    BCrypt::Password.new(remember_digest).is_password?(remember_token)
+  end
+
+  def forget
+    update_attribute(:remember_digest, nil)
+  end
+
+  def activate
+    update_attribute(:activated, true)
+    update_attribute(:activated_at, Time.zone.now)
+  end
+
+  def send_activation_email
+    UserMailer.account_activation(self).deliver_now
+  end
+
+  def create_reset_digest
+    self.reset_token = User.new_token
+    update_attribute(:reset_digest,  User.digest(reset_token))
+    update_attribute(:reset_sent_at, Time.zone.now)
+  end
+
+  def create_reset_digest
+    self.reset_token = User.new_token
+    update_columns(reset_digest:  FILL_IN, reset_sent_at: FILL_IN)
+  end
+
+  def send_password_reset_email
+    UserMailer.password_reset(self).deliver_now
+  end
+
+  def password_reset_expired?
+    reset_sent_at < 2.hours.ago
+  end
+
+  private
+
+    def downcase_email
+      self.email = email.downcase
+    end
+
+    def create_activation_digest
+      self.activation_token  = User.new_token
+      self.activation_digest = User.digest(activation_token)
+    end
 end

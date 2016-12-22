@@ -20,6 +20,11 @@ gem "erb2haml"
 gem "haml-rails"
 gem "pry"
 gem 'acts_as_votable'
+gem 'bcrypt'
+gem 'bcrypt-ruby', '~> 3.0.0'
+group :development do
+  gem 'xray-rails'
+end
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
